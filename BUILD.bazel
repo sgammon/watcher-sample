@@ -1,0 +1,29 @@
+
+package(
+    default_visibility = ["//visibility:public"],
+)
+
+load(
+	"@rules_java//java:defs.bzl",
+	"java_binary",
+)
+
+
+config_setting(
+	name = "live",
+	values = {"define": "LIVE=1"},
+)
+
+java_binary(
+	name = "app",
+	srcs = glob(["**/*.java"]),
+	main_class = "hello.App",
+	tags = [
+		"ibazel_live_reload",
+		"iblaze_notify_changes",
+	],
+	jvm_flags = select({
+        "//:live": ["-DLIVE=1"],
+        "//conditions:default": ["-DLIVE=0"],
+    }),
+)
